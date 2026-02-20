@@ -1,5 +1,8 @@
-/- Homework VII.1 — Projects Problem 3 — Zijun Cui -/
+/- Homework VII.1 — Projects Problem 2 3 — Zijun Cui -/
+-- Problem 2
+-- https://github.com/ZijunCui02/EE598Cui
 
+-- Problem 3
 -- VII.1 Projects, Ex3: Article Response
 --
 -- the article "A.I. Companies Are Eating Higher Education"
