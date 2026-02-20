@@ -1,6 +1,4 @@
-# EE598 Automated Math — Zijun Cui
-
-[zijuncui.com](https://zijuncui.com)
+# EE598 Automated Math — [Zijun Cui](https://zijuncui.com)
 
 ## Course Project: Formalizing Binaural Audio DSP in Lean 4
 
