@@ -1,116 +1,80 @@
-/-
-  EE598 Automated Mathematics - Homework I.2
-  Student: Cui
-  File: HW_I_2.lean
+/- Homework I.2 — Zijun Cui -/
 
-  Instructions:
-  - Each exercise is restated as a comment
-  - Textual answers are written as comments
-  - Lean code should be executable with no errors
-  - Use `sorry` for partial credit if stuck
--/
-
--- Import Mathlib tactics (this may take a while to compile first time)
 import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Polyrith
 import Mathlib.Data.Real.Basic
+import Mathlib.Data.Nat.Prime.Basic
 
--- ============================================================
--- EXERCISE 1: Basic test (from slide instructions)
--- Verify your environment works correctly
--- ============================================================
-
-#eval 1+2   -- Should output: 3
+-- Ex6 Test eval and a linarith example
+#eval 1 + 2
 
 example (x y z : ℚ)
-        (h1 : 2*x < 3*y)
-        (h2 : -4*x + 2*z < 0)
-        (h3 : 12*y - 4* z < 0) : False := by
+    (h1 : 2 * x < 3 * y)
+    (h2 : -4 * x + 2 * z < 0)
+    (h3 : 12 * y - 4 * z < 0) : False := by
   linarith
 
--- ============================================================
--- EXERCISE 2: Figure out how to encode this statement:
--- theorem T₁ : ∀ x : ℝ, 0 ≤ x² := sorry
---
--- Unicode input guide:
---   T₁  → T\_1
---   ∀   → \forall
---   ℝ   → \R
---   ≤   → \le
---   ²   → \^2 or \sup2
--- ============================================================
+  -- →                   \to
+  -- ↔                   \iff
+  -- ∀                   \forall
+  -- ∃                   \exists
+  -- ℕ                   \N
+  -- xᵢ                  x\_i
 
-theorem T₁ : ∀ x : ℝ, 0 ≤ x^2 := by
-  intro x
-  apply sq_nonneg
+-- Ex9 encode this statement
 
--- ============================================================
--- EXERCISE 3: Use #check to determine the types of:
---   (4,5), ℕ × ℕ, and Type
--- ============================================================
+theorem T₁ : ∀ x : ℝ, 0 ≤ x ^ 2 := sq_nonneg
+-- theorem T\_1 : \forall x : \R, \le x ^ 2 := sq_nonneg
 
-#check (4, 5)       -- ℕ × ℕ
-#check ℕ × ℕ        -- Type
-#check Type         -- Type 1
+-- Ex11: Use #check to determine the types of (4,5), ℕ × ℕ, and Type
 
-/-
-  Answer:
-  - (4, 5) has type ℕ × ℕ (a pair of natural numbers)
-  - ℕ × ℕ has type Type (it is a type itself)
-  - Type has type Type 1 (the universe hierarchy)
--/
+#check 1
+-- ℕ
+#check "1"
+-- String
+#check ∃ (x : Nat), x < 0
+-- Prop
+#check fun x => x+1
+-- ℕ → ℕ
 
--- ============================================================
--- EXERCISE 4: Redo the proof using `aesop`
--- Original: (p → q) ∧ (q → r) → (p → r)
--- ============================================================
+#check (4, 5)
+-- ℕ × ℕ
+#check ℕ × ℕ
+-- Type
+#check Type
+-- Type 1
 
-example (p q r : Prop) : (p → q) ∧ (q → r) → (p → r) := by
-  aesop
+#eval 1+1
+-- 2
+#eval "hello".append " world"
+-- "hello world"
+#eval if 2 > 2 then "the universe has a problem" else "everything is ok"
+-- "everything is ok"
+#eval Nat.Prime 1013
+-- true
 
--- ============================================================
--- EXERCISE 5: Write a function `square` that squares every
--- number in a list of natural numbers.
--- Use `remove_zeros` as a template.
--- ============================================================
+-- Ex16: aesop: Automated Extensible Search for Obvious Proofs
+example (p q r : Prop) : (p → q) ∧ (q → r) → (p → r) := by aesop
 
--- Reference: remove_zeros from the slides
+
 def remove_zeros (L : List ℕ) : List ℕ := match L with
   | [] => List.nil
   | x::Q => if x = 0 then remove_zeros Q else x::(remove_zeros Q)
 
--- Solution: square function
+#check remove_zeros
+
+#eval remove_zeros [1,2,3,0,5,0,0]     -- [1,2,3,5]
+
+-- Ex18: Write a function square that squares every number in a list of natural numbers.
+-- Use remove_zeros as a template. Test your code using #eval.
 def square (L : List ℕ) : List ℕ := match L with
   | [] => []
-  | x::Q => (x * x) :: square Q
+  | x :: xs => (x * x) :: square xs
 
--- Alternative using List.map (more idiomatic)
-def square' (L : List ℕ) : List ℕ := L.map (fun x => x * x)
+#eval square [1, 2, 3, 4, 5]
 
--- Tests
-#eval square [1, 2, 3, 4, 5]     -- [1, 4, 9, 16, 25]
-#eval square' [1, 2, 3, 4, 5]    -- [1, 4, 9, 16, 25]
-#eval square []                  -- []
+-- Ex20: Look up List.find? on Loogle and try the examples.
 
--- ============================================================
--- EXERCISE 6: Look up List.find? on Loogle
--- Try the examples from the documentation
--- ============================================================
+#eval [7, 6, 5, 8, 1, 2, 6].find? (· < 5) = some 1
+#eval [7, 6, 5, 8, 1, 2, 6].find? (· < 1) = none
 
-/-
-  Loogle search: List.find?
-  URL: https://loogle.lean-lang.org/
-
-  List.find? : (a → Bool) → List a → Option a
-
-  Returns the first element of the list satisfying the predicate,
-  or none if no such element exists.
--/
-
-#eval [1, 2, 3, 4, 5].find? (· > 3)     -- some 4
-#eval [1, 2, 3, 4, 5].find? (· > 10)    -- none
-#eval ["hello", "world"].find? (·.length > 4)  -- some "hello"
-
--- ============================================================
--- END OF HOMEWORK I.2
--- ============================================================
+-- List.find? returns the first element in the list satisfying the predicate
