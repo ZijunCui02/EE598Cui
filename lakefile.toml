@@ -1,7 +1,7 @@
 name = "EE598_Cui"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["EE598Cui"]
+defaultTargets = ["EE598Cui", "SpatialAudio"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -16,3 +16,7 @@ rev = "v4.27.0-rc1"
 
 [[lean_lib]]
 name = "EE598Cui"
+
+[[lean_lib]]
+name = "SpatialAudio"
+srcDir = "project"
